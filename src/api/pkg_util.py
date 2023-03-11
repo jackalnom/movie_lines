@@ -4,7 +4,6 @@ import pkg_resources
 
 router = APIRouter()
 
-
 def calc_container(path):
     total_size = 0
     for dirpath, dirnames, filenames in os.walk(path):
@@ -15,7 +14,7 @@ def calc_container(path):
 
 @router.get("/version/")
 def version():
-    return "1.0"
+    return "1.1"
 
 @router.get("/pkgsize/")
 def get_pkgsize():
