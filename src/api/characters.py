@@ -7,7 +7,7 @@ router = APIRouter()
 
 
 @router.get("/characters/{name}")
-def say_line(name: str):
+def fuzzy_match_character_names(name: str):
     sql = sqlalchemy.text(
         """
         select name, title from 
