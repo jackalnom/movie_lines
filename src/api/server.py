@@ -10,4 +10,4 @@ app.include_router(pkg_util.router)
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to the LOTR dialog responder"}
+    return {"message": "Welcome to the movie lines API"}
