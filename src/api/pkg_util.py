@@ -12,6 +12,10 @@ def calc_container(path):
             total_size += os.path.getsize(fp)
     return total_size
 
+@router.get("/team/")
+def version():
+    return "Lucas"
+
 @router.get("/version/")
 def version():
     return "1.1"
