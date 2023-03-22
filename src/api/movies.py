@@ -15,7 +15,7 @@ def get_movie(id: str):
         movies
         join characters on characters.movie_id = movies.movie_id
         join (select count(*) num_lines, character_id from lines group by character_id) lines ON characters.character_id = lines.character_id
-        where movies.movie_id = 0
+        where movies.movie_id = :id
         order by num_lines desc
         ) where row <= 5
     """
