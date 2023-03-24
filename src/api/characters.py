@@ -10,7 +10,7 @@ router = APIRouter()
 def get_character(id: str):
     character_sql = sqlalchemy.text(
         """
-        select character_id, name, gender, age, title from 
+        select character_id, name, gender, title from 
         characters
         join movies on movies.movie_id = characters.movie_id
         where character_id = :id
@@ -59,7 +59,6 @@ def get_character(id: str):
                          "character": row.name,
                          "movie": row.title,
                          "gender": row.gender,
-                         "age": row.age,
                          "top_conversations": conversation_json})
     except NoResultFound:
         raise HTTPException(status_code=404, detail="character not found.")
