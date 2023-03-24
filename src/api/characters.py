@@ -93,7 +93,7 @@ def list_characters(name: str = "",
     elif sort is character_sort_options.number_of_lines:
         order_by = sqlalchemy.desc(subquery.c.num_lines)
     else:
-        raise HTTPException(status_code=400, detail="Invalid sort key")
+        assert False
 
     stmt = sqlalchemy.select(characters.c.name, 
                               characters.c.character_id, 
@@ -112,6 +112,5 @@ def list_characters(name: str = "",
                             "character": row.name,
                             "movie": row.title,
                             "number_of_lines": row.num_lines})
-            # TODO: Add number of total lines spoken.
 
     return json
