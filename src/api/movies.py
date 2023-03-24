@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException
 import sqlalchemy
-from sqlalchemy.orm.exc import NoResultFound
 from src import database as db
 
 router = APIRouter()
@@ -11,10 +10,15 @@ def get_movie(id: str):
     sql = sqlalchemy.text(
         """
         select * from (
-        select movies.movie_id, title, characters.character_id, characters.name, num_lines, ROW_NUMBER() OVER (ORDER BY num_lines desc) as row from 
+        select movies.movie_id, title, 
+        characters.character_id, characters.name, num_lines, 
+        ROW_NUMBER() OVER (ORDER BY num_lines desc) as row from 
         movies
         join characters on characters.movie_id = movies.movie_id
-        join (select count(*) num_lines, character_id from lines group by character_id) lines ON characters.character_id = lines.character_id
+        join (
+            select count(*) num_lines, character_id from lines group by character_id
+            ) lines 
+        ON characters.character_id = lines.character_id
         where movies.movie_id = :id
         order by num_lines desc
         ) where row <= 5
