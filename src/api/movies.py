@@ -11,7 +11,7 @@ def get_movie(id: str):
     sql = sqlalchemy.text(
         """
         select * from (
-        select movies.movie_id, title, characters.name, num_lines, ROW_NUMBER() OVER (ORDER BY num_lines desc) as row from 
+        select movies.movie_id, title, characters.character_id, characters.name, num_lines, ROW_NUMBER() OVER (ORDER BY num_lines desc) as row from 
         movies
         join characters on characters.movie_id = movies.movie_id
         join (select count(*) num_lines, character_id from lines group by character_id) lines ON characters.character_id = lines.character_id
@@ -33,6 +33,7 @@ def get_movie(id: str):
                         "top_characters": character_json}
 
             character_json.append({
+                        "character_id": row.character_id,
                         "character": row.name,
                         "num_lines": row.num_lines})
             
