@@ -38,7 +38,6 @@ def get_character(id: str):
         GROUP BY character2_id, name
         order by num_lines desc)
         order by num_lines desc
-        limit 5
         """
     )
 
@@ -52,14 +51,13 @@ def get_character(id: str):
                          "gender": row.gender,
                          "number_of_lines_together": row.num_lines})
 
-            result = connection.execute(character_sql, {"id": id})
+            row = connection.execute(character_sql, {"id": id}).one()
 
-            for row in result:
-                json = ({"character_id": row.character_id,
-                         "character": row.name,
-                         "movie": row.title,
-                         "gender": row.gender,
-                         "top_conversations": conversation_json})
+            json = ({"character_id": row.character_id,
+                        "character": row.name,
+                        "movie": row.title,
+                        "gender": row.gender,
+                        "top_conversations": conversation_json})
     except NoResultFound:
         raise HTTPException(status_code=404, detail="character not found.")
 

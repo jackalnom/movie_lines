@@ -6,7 +6,7 @@ from src import database as db
 router = APIRouter()
 
 # Get movie lines with context
-@router.get("/lines/{name}")
+@router.get("/lines/")
 def say_line(name: str):
     sql = sqlalchemy.text(
         """
