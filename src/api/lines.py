@@ -5,13 +5,14 @@ from src import database as db
 
 router = APIRouter()
 
+
 # Get movie lines with context
 @router.get("/lines/")
 def say_line(name: str):
     sql = sqlalchemy.text(
         """
-        select line_text from 
-        characters 
+        select line_text from
+        characters
         join lines on characters.character_id = lines.character_id
         where name = :char_name
         ORDER BY RANDOM()

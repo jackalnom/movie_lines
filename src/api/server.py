@@ -16,14 +16,16 @@ You will be able to:
 * **Read users** (_not implemented_).
 """
 
-app = FastAPI(title="Movie Lines API",
+app = FastAPI(
+    title="Movie Lines API",
     description=description,
     version="0.0.1",
     terms_of_service="http://example.com/terms/",
     contact={
         "name": "Lucas Pierce",
         "email": "lupierce@calpoly.edu",
-    })
+    },
+)
 app.include_router(characters.router)
 app.include_router(lines.router)
 app.include_router(movies.router)
