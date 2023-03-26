@@ -12,7 +12,8 @@ def get_movie(id: str):
         """
         select * from (
         select movies.movie_id, title,
-        characters.character_id, characters.name, num_lines
+        characters.character_id, characters.name, num_lines,
+        ROW_NUMBER() OVER (ORDER BY num_lines desc) as row 
         from
         movies
         join characters on characters.movie_id = movies.movie_id
@@ -22,7 +23,7 @@ def get_movie(id: str):
         ON characters.character_id = lines.character_id
         where movies.movie_id = :id
         order by num_lines desc
-        )
+        ) where row <= 5
     """
     )
 
