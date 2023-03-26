@@ -13,7 +13,7 @@ def get_movie(movie_id: str):
         select * from (
         select movies.movie_id, title,
         characters.character_id, characters.name, num_lines,
-        ROW_NUMBER() OVER (ORDER BY num_lines desc) as row 
+        ROW_NUMBER() OVER (ORDER BY num_lines desc) as row
         from
         movies
         join characters on characters.movie_id = movies.movie_id
@@ -66,7 +66,6 @@ def list_movies(limit: int = 50, offset: int = 0):
         order by movie_id asc
         limit :limit
         offset :offset
-
     """
     )
 
