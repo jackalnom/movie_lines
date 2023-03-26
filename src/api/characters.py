@@ -117,7 +117,7 @@ def list_characters(
         .join(subquery)
         .limit(limit)
         .offset(offset)
-        .order_by(order_by)
+        .order_by(order_by, characters.c.character_id)
     )
 
     # filter only if name parameter is passed
