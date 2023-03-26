@@ -15,6 +15,7 @@ def database_connection_url():
 
 
 print(f"working directory: {os.getcwd()}")
+print(f"database_connection_url: {database_connection_url()}")
 engine = create_engine(database_connection_url())
 logging.basicConfig()
 logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
