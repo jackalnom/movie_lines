@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 import os
 import pkg_resources
+import sys
 
 router = APIRouter()
 
@@ -14,9 +15,9 @@ def calc_container(path):
     return total_size
 
 
-@router.get("/version/")
+@router.get("/pyversion/")
 def version():
-    return "1.0"
+    return sys.version_info
 
 
 @router.get("/pkgsize/")
