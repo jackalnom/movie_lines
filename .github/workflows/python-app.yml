@@ -11,7 +11,7 @@ jobs:
         python-version: ["3.9"]
     environment: PYTEST
     env:
-      POSTGRES_USER: ${{ env.POSTGRES_USER }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
