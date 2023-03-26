@@ -27,8 +27,8 @@ def get_character(id: str):
         join characters ON character1_id = characters.character_id
         join lines ON lines.conversation_id = conversations.conversation_id
         WHERE character2_id = :id
-        GROUP BY character1_id, name
-        order by num_lines desc)
+        GROUP BY character1_id, name, gender
+        order by num_lines desc) as sq1
         UNION ALL
         select * from
         (select character2_id character_id, name, gender, COUNT(*) num_lines
@@ -36,8 +36,8 @@ def get_character(id: str):
         join characters ON character2_id = characters.character_id
         join lines ON lines.conversation_id = conversations.conversation_id
         WHERE character1_id = :id
-        GROUP BY character2_id, name
-        order by num_lines desc)
+        GROUP BY character2_id, name, gender
+        order by num_lines desc) as sq2
         order by num_lines desc
         """
     )

@@ -6,8 +6,8 @@ router = APIRouter()
 
 
 # include top 3 actors by number of lines
-@router.get("/movies/{id}")
-def get_movie(id: str):
+@router.get("/movies/{movie_id}")
+def get_movie(movie_id: str):
     sql = sqlalchemy.text(
         """
         select * from (
@@ -21,14 +21,14 @@ def get_movie(id: str):
             select count(*) num_lines, character_id from lines group by character_id
             ) lines
         ON characters.character_id = lines.character_id
-        where movies.movie_id = :id
+        where movies.movie_id = :movie_id
         order by num_lines desc
-        ) where row <= 5
+        ) AS sq2 where row <= 5
     """
     )
 
     with db.engine.connect() as connection:
-        result = connection.execute(sql, {"id": id})
+        result = connection.execute(sql, {"movie_id": movie_id})
         character_json = []
         movie_json = None
         for row in result:
