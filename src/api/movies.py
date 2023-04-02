@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 import sqlalchemy
 from src import database as db
+from enum import Enum
 
 router = APIRouter()
 
@@ -56,24 +57,58 @@ def get_movie(movie_id: str):
 # TODO: Mean age of characters by gender weighted by number of lines.
 
 
+class movie_sort_options(str, Enum):
+    movie_title = "movie_title"
+    year = "year"
+    rating = "rating"
+
+
 # Add get parameters
 @router.get("/movies/")
-def list_movies(limit: int = 50, offset: int = 0):
-    sql = sqlalchemy.text(
-        """
-        select movie_id, title from
-        movies
-        order by movie_id asc
-        limit :limit
-        offset :offset
-    """
+def list_movies(
+    name: str = "",
+    limit: int = 50,
+    offset: int = 0,
+    sort: movie_sort_options = movie_sort_options.movie_title,
+):
+    if sort is movie_sort_options.movie_title:
+        order_by = db.movies.c.title
+    elif sort is movie_sort_options.year:
+        order_by = db.movies.c.year
+    elif sort is movie_sort_options.rating:
+        order_by = sqlalchemy.desc(db.movies.c.imdb_rating)
+    else:
+        assert False
+
+    stmt = (
+        sqlalchemy.select(
+            db.movies.c.movie_id,
+            db.movies.c.title,
+            db.movies.c.year,
+            db.movies.c.imdb_rating,
+            db.movies.c.imdb_votes,
+        )
+        .limit(limit)
+        .offset(offset)
+        .order_by(order_by, db.movies.c.movie_id)
     )
 
-    json = []
-    with db.engine.connect() as connection:
-        result = connection.execute(sql, {"limit": limit, "offset": offset})
-        ## create links to top 10 characters by number of lines
+    # filter only if name parameter is passed
+    if name != "":
+        stmt = stmt.where(db.movies.c.title.ilike(f"%{name}%"))
+
+    with db.engine.connect() as conn:
+        result = conn.execute(stmt)
+        json = []
         for row in result:
-            json.append({"movie_id": row.movie_id, "title": row.title})
+            json.append(
+                {
+                    "movie_id": row.movie_id,
+                    "movie_title": row.title,
+                    "year": row.year,
+                    "imdb_rating": row.imdb_rating,
+                    "imdb_votes": row.imdb_votes,
+                }
+            )
 
     return json

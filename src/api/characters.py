@@ -84,23 +84,18 @@ def list_characters(
     offset: int = 0,
     sort: character_sort_options = character_sort_options.character,
 ):
-    metadata_obj = sqlalchemy.MetaData()
-    characters = sqlalchemy.Table("characters", metadata_obj, autoload_with=db.engine)
-    movies = sqlalchemy.Table("movies", metadata_obj, autoload_with=db.engine)
-    lines = sqlalchemy.Table("lines", metadata_obj, autoload_with=db.engine)
-
     subquery = (
         sqlalchemy.select(
-            lines.c.character_id, sqlalchemy.func.count("*").label("num_lines")
+            db.lines.c.character_id, sqlalchemy.func.count("*").label("num_lines")
         )
-        .group_by(lines.c.character_id)
+        .group_by(db.lines.c.character_id)
         .subquery()
     )
 
     if sort is character_sort_options.character:
-        order_by = characters.c.name
+        order_by = db.characters.c.name
     elif sort is character_sort_options.movie:
-        order_by = movies.c.title
+        order_by = db.movies.c.title
     elif sort is character_sort_options.number_of_lines:
         order_by = sqlalchemy.desc(subquery.c.num_lines)
     else:
@@ -108,21 +103,21 @@ def list_characters(
 
     stmt = (
         sqlalchemy.select(
-            characters.c.name,
-            characters.c.character_id,
-            movies.c.title,
+            db.characters.c.name,
+            db.characters.c.character_id,
+            db.movies.c.title,
             subquery.c.num_lines,
         )
-        .join(movies)
+        .join(db.movies)
         .join(subquery)
         .limit(limit)
         .offset(offset)
-        .order_by(order_by, characters.c.character_id)
+        .order_by(order_by, db.characters.c.character_id)
     )
 
     # filter only if name parameter is passed
     if name != "":
-        stmt = stmt.where(characters.c.name.ilike(f"%{name}%"))
+        stmt = stmt.where(db.characters.c.name.ilike(f"%{name}%"))
 
     with db.engine.connect() as conn:
         result = conn.execute(stmt)

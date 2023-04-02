@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 import os
 import logging
 import dotenv
+import sqlalchemy
 
 
 def database_connection_url():
@@ -19,3 +20,8 @@ print(f"database_connection_url: {database_connection_url()}")
 engine = create_engine(database_connection_url())
 logging.basicConfig()
 logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
+
+metadata_obj = sqlalchemy.MetaData()
+characters = sqlalchemy.Table("characters", metadata_obj, autoload_with=engine)
+movies = sqlalchemy.Table("movies", metadata_obj, autoload_with=engine)
+lines = sqlalchemy.Table("lines", metadata_obj, autoload_with=engine)
