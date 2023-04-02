@@ -21,3 +21,16 @@ def test_characters():
 
     with open("test/characters/root.json", encoding="utf-8") as f:
         assert response.json() == json.load(f)
+
+
+def test_sort_filter():
+    response = client.get(
+        "/characters/?name=amy&limit=50&offset=0&sort=number_of_lines"
+    )
+    assert response.status_code == 200
+
+    with open(
+        "test/characters/characters-name=amy&limit=50&offset=0&sort=number_of_lines.json",
+        encoding="utf-8",
+    ) as f:
+        assert response.json() == json.load(f)
