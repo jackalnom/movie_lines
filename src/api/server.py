@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from src.api import lines, characters, movies, pkg_util
 
 description = """
-Movie Lines API helps you do awesome stuff. 🚀
+Movie Lines API returns dialog statistics on top hollywood movies from decades past.
 
 ## Items
 
