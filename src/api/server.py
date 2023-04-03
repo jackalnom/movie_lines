@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.api import lines, characters, movies, pkg_util
+from src.api import characters, movies, pkg_util
 
 description = """
 Movie API returns dialog statistics on top hollywood movies from decades past.
@@ -39,11 +39,11 @@ app = FastAPI(
     openapi_tags=tags_metadata,
 )
 app.include_router(characters.router)
-app.include_router(lines.router)
+# app.include_router(lines.router)
 app.include_router(movies.router)
 app.include_router(pkg_util.router)
 
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to the movie lines API"}
+    return {"message": "Welcome to the Movie API. See /docs for more information."}
