@@ -8,7 +8,7 @@ router = APIRouter()
 
 
 @router.get("/characters/{id}")
-def get_character(id: str):
+def get_character(id: int):
     """
     This endpoint returns a single character by its identifier. For each character
     it returns:
