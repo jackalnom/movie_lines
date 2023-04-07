@@ -38,7 +38,7 @@ def get_movie(movie_id: int):
             ) lines
         ON characters.character_id = lines.character_id
         where movies.movie_id = :movie_id
-        order by num_lines desc
+        order by num_lines desc, character_id
         ) AS sq2 where row <= 5
     """
     )

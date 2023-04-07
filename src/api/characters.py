@@ -34,7 +34,6 @@ def get_character(id: int):
         characters
         join movies on movies.movie_id = characters.movie_id
         where character_id = :id
-        limit 50
     """
     )
 
@@ -57,7 +56,7 @@ def get_character(id: int):
         WHERE character1_id = :id
         GROUP BY character2_id, name, gender
         order by num_lines desc) as sq2
-        order by num_lines desc
+        order by num_lines desc, character_id
         """
     )
 
