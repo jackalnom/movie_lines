@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Query, HTTPException
 import sqlalchemy
 from sqlalchemy.orm.exc import NoResultFound
 from src import database as db
@@ -98,8 +98,8 @@ class character_sort_options(str, Enum):
 @router.get("/characters/")
 def list_characters(
     name: str = "",
-    limit: int = 50,
-    offset: int = 0,
+    limit: int = Query(50, ge=1, le=250),
+    offset: int = Query(0, ge=0),
     sort: character_sort_options = character_sort_options.character,
 ):
     """

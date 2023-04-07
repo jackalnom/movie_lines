@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Query, HTTPException
 import sqlalchemy
 from src import database as db
 from enum import Enum
@@ -82,8 +82,8 @@ class movie_sort_options(str, Enum):
 @router.get("/movies/")
 def list_movies(
     name: str = "",
-    limit: int = 50,
-    offset: int = 0,
+    limit: int = Query(50, ge=1, le=250),
+    offset: int = Query(0, ge=0),
     sort: movie_sort_options = movie_sort_options.movie_title,
 ):
     """
