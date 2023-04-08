@@ -29,7 +29,7 @@ def get_movie(movie_id: int):
         select * from (
         select movies.movie_id, title,
         characters.character_id, characters.name, num_lines,
-        ROW_NUMBER() OVER (ORDER BY num_lines desc, character_id) as row
+        ROW_NUMBER() OVER (ORDER BY num_lines desc, characters.character_id) as row
         from
         movies
         join characters on characters.movie_id = movies.movie_id
