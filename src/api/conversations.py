@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from src import database as db
 from pydantic import BaseModel
 from typing import List
@@ -7,7 +7,6 @@ import sqlalchemy
 
 class Lines(BaseModel):
     character_id: int
-    line_sort: int
     line_text: str
 
 
@@ -27,14 +26,45 @@ def add_conversation(movie_id: int, conversation: Conversation):
     by the two characters involved in the conversation and a series of lines between
     those characters in the movie.
 
+    The endpoint returns the id of the resulting conversation that was created.
+
     """
 
-    # TODO: Make sure all characters are in the movie.
-    # TODO: Make sure all lines are in the movie.
-    # TODO: Make sure line sort is unique across conversation.
-    # TODO: Make sure characters are part of the conversation from the line.
-
     with db.engine.begin() as conn:
+        for line in conversation.lines:
+            if line.character_id not in [
+                conversation.character_1_id,
+                conversation.character_2_id,
+            ]:
+                raise HTTPException(
+                    status_code=422, detail="Character is not part of conversation."
+                )
+
+        characters_in_movie = conn.execute(
+            sqlalchemy.text(
+                """
+                SELECT COUNT(*)
+                FROM
+                characters
+                WHERE
+                movie_id = :movie_id AND
+                character_id IN (:character1_id, :character2_id)
+                """
+            ),
+            [
+                {
+                    "character1_id": conversation.character_1_id,
+                    "character2_id": conversation.character_2_id,
+                    "movie_id": movie_id,
+                }
+            ],
+        ).scalar_one()
+
+        if characters_in_movie != 2:
+            raise HTTPException(
+                status_code=422, detail="Characters are not in given movie."
+            )
+
         conversation_id = conn.execute(
             sqlalchemy.text(
                 """
@@ -52,6 +82,20 @@ def add_conversation(movie_id: int, conversation: Conversation):
             ],
         ).scalar_one()
 
+        line_sort = 0
+        lines = []
+        for line in conversation.lines:
+            lines.append(
+                {
+                    "character_id": line.character_id,
+                    "line_sort": line_sort,
+                    "line_text": line.line_text,
+                    "conversation_id": conversation_id,
+                    "movie_id": movie_id,
+                }
+            )
+            line_sort += 1
+
         conn.execute(
             sqlalchemy.text(
                 """
@@ -61,16 +105,7 @@ def add_conversation(movie_id: int, conversation: Conversation):
                 (:character_id, :line_sort, :line_text, :conversation_id, :movie_id)
                 """
             ),
-            [
-                {
-                    "character_id": line.character_id,
-                    "line_sort": line.line_sort,
-                    "line_text": line.line_text,
-                    "conversation_id": conversation_id,
-                    "movie_id": movie_id,
-                }
-                for line in conversation.lines
-            ],
+            lines,
         )
 
     return {"conversation_id": conversation_id}
