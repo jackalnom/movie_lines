@@ -16,9 +16,7 @@ def database_connection_url():
 
 print(f"working directory: {os.getcwd()}")
 print(f"database_connection_url: {database_connection_url()}")
-engine = create_engine(database_connection_url())
-# logging.basicConfig()
-# logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
+engine = create_engine(database_connection_url(), use_insertmanyvalues=True)
 
 metadata_obj = sqlalchemy.MetaData()
 characters = sqlalchemy.Table("characters", metadata_obj, autoload_with=engine)

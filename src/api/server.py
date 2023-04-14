@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.api import characters, movies, pkg_util
+from src.api import characters, movies, pkg_util, conversations
 
 description = """
 Movie API returns dialog statistics on top hollywood movies from decades past.
@@ -15,6 +15,7 @@ You can:
 You can:
 * **list movies with sorting and filtering options.**
 * **retrieve a specific movie by id**
+* **you can add additional conversations to a movie by id**
 """
 tags_metadata = [
     {
@@ -39,7 +40,7 @@ app = FastAPI(
     openapi_tags=tags_metadata,
 )
 app.include_router(characters.router)
-# app.include_router(lines.router)
+app.include_router(conversations.router)
 app.include_router(movies.router)
 app.include_router(pkg_util.router)
 
