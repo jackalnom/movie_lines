@@ -7,7 +7,7 @@ from enum import Enum
 router = APIRouter()
 
 
-@router.get("/characters/{id}")
+@router.get("/characters/{id}", tags=["characters"])
 def get_character(id: int):
     """
     This endpoint returns a single character by its identifier. For each character
@@ -95,7 +95,7 @@ class character_sort_options(str, Enum):
     number_of_lines = "number_of_lines"
 
 
-@router.get("/characters/")
+@router.get("/characters/", tags=["characters"])
 def list_characters(
     name: str = "",
     limit: int = Query(50, ge=1, le=250),

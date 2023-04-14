@@ -7,7 +7,7 @@ router = APIRouter()
 
 
 # include top 3 actors by number of lines
-@router.get("/movies/{movie_id}")
+@router.get("/movies/{movie_id}", tags=["movies"])
 def get_movie(movie_id: int):
     """
     This endpoint returns a single movie by its identifier. For each movie it returns:
@@ -79,7 +79,7 @@ class movie_sort_options(str, Enum):
 
 
 # Add get parameters
-@router.get("/movies/")
+@router.get("/movies/", tags=["movies"])
 def list_movies(
     name: str = "",
     limit: int = Query(50, ge=1, le=250),
