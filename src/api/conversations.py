@@ -26,8 +26,14 @@ def add_conversation(movie_id: int, conversation: Conversation):
     by the two characters involved in the conversation and a series of lines between
     those characters in the movie.
 
-    The endpoint returns the id of the resulting conversation that was created.
+    The endpoint ensures that all characters are part of the referenced movie,
+    that the characters are not the same, and that the lines of a conversation
+    match the characters involved in the conversation.
 
+    Line sort is set based on the order in which the lines are provided in the
+    request body.
+
+    The endpoint returns the id of the resulting conversation that was created.
     """
 
     with db.engine.begin() as conn:
