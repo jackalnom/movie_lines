@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from src.api import characters, movies, pkg_util, conversations
-from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.cors import CORSMiddleware
 
 description = """
 Movie API returns dialog statistics on top hollywood movies from decades past.
@@ -32,7 +32,7 @@ tags_metadata = [
 app = FastAPI(
     title="Movie Lines API",
     description=description,
-    version="0.0.1",
+    version="0.0.2",
     terms_of_service="http://example.com/terms/",
     contact={
         "name": "Lucas Pierce",
@@ -41,12 +41,12 @@ app = FastAPI(
     openapi_tags=tags_metadata,
 )
 
-origins = ["https://movies.bonnycode.com", "http://movies.bonnycode.com"]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
