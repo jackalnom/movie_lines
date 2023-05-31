@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from src.api import characters, movies, pkg_util, conversations
+from fastapi.middleware.cors import CORSMiddleware
 
 description = """
 Movie API returns dialog statistics on top hollywood movies from decades past.
@@ -39,6 +40,18 @@ app = FastAPI(
     },
     openapi_tags=tags_metadata,
 )
+
+origins = ["https://movies.bonnycode.com", "http://movies.bonnycode.com"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 app.include_router(characters.router)
 app.include_router(conversations.router)
 app.include_router(movies.router)
