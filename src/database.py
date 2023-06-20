@@ -1,7 +1,5 @@
-from sqlalchemy import create_engine
 import os
 import dotenv
-import sqlalchemy
 
 
 def database_connection_url():
@@ -16,9 +14,3 @@ def database_connection_url():
 
 print(f"working directory: {os.getcwd()}")
 print(f"database_connection_url: {database_connection_url()}")
-engine = create_engine(database_connection_url(), use_insertmanyvalues=True)
-
-metadata_obj = sqlalchemy.MetaData()
-characters = sqlalchemy.Table("characters", metadata_obj, autoload_with=engine)
-movies = sqlalchemy.Table("movies", metadata_obj, autoload_with=engine)
-lines = sqlalchemy.Table("lines", metadata_obj, autoload_with=engine)
