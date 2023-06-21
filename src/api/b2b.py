@@ -1,13 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from enum import Enum
 from pydantic import BaseModel
-from src.api import auth
 
-router = APIRouter(
-    prefix="/b2b",
-    tags=["b2b"],
-    dependencies=[Depends(auth.get_api_key)],
-)
+router = APIRouter()
 
 
 class PotionInventory(BaseModel):
@@ -29,7 +24,7 @@ class Audit(BaseModel):
 
 
 # Gets called every other day
-@router.post("/auditor")
+@router.post("/b2b/auditor", tags=["b2b"])
 def post_audit(audit: Audit):
     """ """
 
@@ -57,7 +52,7 @@ class WholesaleCatalog(BaseModel):
 
 
 # Gets called once a day
-@router.post("/wholesaler")
+@router.post("/b2b/wholesaler", tags=["b2b"])
 def post_wholesale_purchase_plan(wholesale_catalog: WholesaleCatalog):
     """ """
 
@@ -75,7 +70,7 @@ def post_wholesale_purchase_plan(wholesale_catalog: WholesaleCatalog):
     #  money / cost of small red barrels.
 
 
-@router.post("/deliver_bottles")
+@router.post("/b2b/deliver_bottles", tags=["b2b"])
 def post_deliver_bottles(potions_delivered: list[PotionInventory]):
     """ """
 
@@ -83,7 +78,7 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
 
 
 # Gets called 4 times a day
-@router.post("/bottler")
+@router.post("/b2b/bottler", tags=["b2b"])
 def post_bottle_plan():
     """
     Go from barrel to bottle.
