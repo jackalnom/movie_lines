@@ -1,17 +1,24 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel
+from src.api import auth
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/carts",
+    tags=["cart"],
+    dependencies=[Depends(auth.get_api_key)],
+)
 
 
-@router.post("/carts", tags=["cart"])
-def create_cart():
+@router.post("/")
+def create_cart(request: Request):
     """ """
+    if request.state.is_demo:
+        return {"cart_id": 1, "is_demo": True}
 
     return {"cart_id": 1}
 
 
-@router.get("/carts/{cart_id}", tags=["cart"])
+@router.get("/{cart_id}")
 def get_cart(cart_id: int):
     """ """
 
@@ -22,7 +29,7 @@ class CartItem(BaseModel):
     quantity: int
 
 
-@router.put("/carts/{cart_id}/items/{item_sku}", tags=["cart"])
+@router.put("/{cart_id}/items/{item_sku}")
 def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     """ """
 
@@ -33,7 +40,7 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     return {"cart_id": 1}
 
 
-@router.post("/carts/{cart_id}/checkout", tags=["cart"])
+@router.post("/{cart_id}/checkout")
 def checkout(cart_id: int):
     """ """
 
